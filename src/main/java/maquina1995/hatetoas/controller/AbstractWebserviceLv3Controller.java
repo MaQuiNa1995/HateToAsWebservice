@@ -10,7 +10,6 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,12 +42,12 @@ public abstract class AbstractWebserviceLv3Controller<S extends AbstractGenericS
 		return ResponseEntity.ok(service.create(dto));
 	}
 
-	@GetMapping({ "", "/{id}" })
-	public ResponseEntity<List<D>> find(@PathVariable(required = false) K id) {
-		List<D> dtos = (id == null) ? service.findAll() : Arrays.asList(service.find(id));
+	@GetMapping({ "/", "/{id}" })
+	public ResponseEntity<List<D>> find(@RequestParam(required = false) K id) {
+		List<D> dtos = id == null ? service.findAll() : Arrays.asList(service.find(id));
 
 		dtos.forEach(dto -> {
-			Link link = WebMvcLinkBuilder.linkTo(dto.getClass())
+			Link link = WebMvcLinkBuilder.linkTo(this.getClass())
 			        .slash(dto.getId())
 			        .withSelfRel();
 
