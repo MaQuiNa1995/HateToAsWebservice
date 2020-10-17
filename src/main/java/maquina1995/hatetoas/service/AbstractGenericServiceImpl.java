@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import maquina1995.hatetoas.domain.Persistible;
-import maquina1995.hatetoas.dto.PersistibleDto;
+import maquina1995.hatetoas.dto.AbstractHatetoasDto;
 import maquina1995.hatetoas.mapper.AbstractMapper;
 
 /**
@@ -23,7 +23,7 @@ import maquina1995.hatetoas.mapper.AbstractMapper;
  */
 public abstract class AbstractGenericServiceImpl<T extends Persistible<K>,
         K extends Serializable,
-        D extends PersistibleDto<K>,
+        D extends AbstractHatetoasDto<K>,
         R extends JpaRepository<T, K>,
         M extends AbstractMapper<T, D>> implements AbstractGenericService<T, K, D> {
 

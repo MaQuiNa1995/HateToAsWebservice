@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import maquina1995.hatetoas.domain.Persistible;
-import maquina1995.hatetoas.dto.PersistibleDto;
+import maquina1995.hatetoas.dto.AbstractHatetoasDto;
 import maquina1995.hatetoas.service.AbstractGenericService;
 
 /**
@@ -28,10 +30,10 @@ import maquina1995.hatetoas.service.AbstractGenericService;
  * @param <K> clave primaria de la entity
  * @param <D> dto
  */
-public abstract class AbstractWebserviceLv2Controller<S extends AbstractGenericService<T, K, D>,
+public abstract class AbstractWebserviceLv3Controller<S extends AbstractGenericService<T, K, D>,
         T extends Persistible<K>,
         K extends Serializable,
-        D extends PersistibleDto<K>> {
+        D extends AbstractHatetoasDto<K>> {
 
 	@Autowired
 	protected S service;
@@ -44,6 +46,15 @@ public abstract class AbstractWebserviceLv2Controller<S extends AbstractGenericS
 	@GetMapping({ "", "/{id}" })
 	public ResponseEntity<List<D>> find(@PathVariable(required = false) K id) {
 		List<D> dtos = (id == null) ? service.findAll() : Arrays.asList(service.find(id));
+
+		dtos.forEach(dto -> {
+			Link link = WebMvcLinkBuilder.linkTo(dto.getClass())
+			        .slash(dto.getId())
+			        .withSelfRel();
+
+			dto.add(link);
+		});
+
 		return ResponseEntity.ok(dtos);
 	}
 

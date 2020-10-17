@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import maquina1995.hatetoas.domain.Persistible;
-import maquina1995.hatetoas.dto.PersistibleDto;
+import maquina1995.hatetoas.dto.AbstractHatetoasDto;
 
 /**
  * 
@@ -14,7 +14,9 @@ import maquina1995.hatetoas.dto.PersistibleDto;
  * @param <K> id de la entidad
  * @param <D> dto
  */
-public interface AbstractGenericService<T extends Persistible<K>, K extends Serializable, D extends PersistibleDto<K>> {
+public interface AbstractGenericService<T extends Persistible<K>,
+        K extends Serializable,
+        D extends AbstractHatetoasDto<K>> {
 
 	T create(D dto);
 
